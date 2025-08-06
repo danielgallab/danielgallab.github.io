@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>daniel elgallab - portfolio</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Courier New", monospace;
+        background: #0f1419;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Animated grid background */
+      .grid-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+            rgba(0, 150, 255, 0.15) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 150, 255, 0.15) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: gridMove 20s linear infinite;
+        z-index: 1;
+      }
+
+      @keyframes gridMove {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 50px 50px;
+        }
+      }
+
+      /* Floating particles */
+      .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .particle {
+        position: absolute;
+        background: #00d4ff;
+        border-radius: 50%;
+        opacity: 0;
+        animation: float-particle linear infinite;
+      }
+
+      @keyframes float-particle {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.6;
+        }
+        90% {
+          opacity: 0.6;
+        }
+        100% {
+          transform: translateY(-10vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Scan lines effect */
+      .scan-lines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 3px,
+          rgba(0, 212, 255, 0.03) 3px,
+          rgba(0, 212, 255, 0.03) 6px
+        );
+        pointer-events: none;
+        z-index: 4;
+        animation: scanlines 200ms linear infinite;
+      }
+
+      @keyframes scanlines {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(6px);
+        }
+      }
+
+      /* Enhanced vignette */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+            circle at 30% 20%,
+            rgba(0, 212, 255, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 70% 80%,
+            rgba(102, 224, 255, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at center,
+            transparent 0%,
+            rgba(15, 20, 25, 0.4) 100%
+          );
+        pointer-events: none;
+        z-index: 5;
+        animation: vignette-pulse 8s ease-in-out infinite;
+      }
+
+      @keyframes vignette-pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+
+      .container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+      }
+
+      .connection-lines {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 15;
+      }
+
+      .connection-line {
+        position: absolute;
+        height: 2px;
+        opacity: 0.6;
+        transform-origin: left center;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      .connection-line::before {
+        content: "";
+        position: absolute;
+        top: -1px;
+        left: 0;
+        right: 0;
+        bottom: -1px;
+        background-image: repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 8px,
+          #00d4ff 8px,
+          #00d4ff 16px
+        );
+        opacity: 0.8;
+        animation: ripple 1s linear infinite;
+        background-size: 16px 100%;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+
+      @keyframes ripple {
+        0% {
+          background-position: 32px 0;
+        }
+        100% {
+          background-position: 0 0;
+        }
+      }
+
+      .name {
+        font-size: 2.5em;
+        font-weight: bold;
+        color: #00d4ff;
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.5),
+          0 0 20px rgba(0, 212, 255, 0.3);
+        text-align: center;
+        z-index: 20;
+        padding: 15px 22px;
+        border-radius: 5px;
+        position: relative;
+        backdrop-filter: blur(6px);
+        transition: all 0.3s ease;
+      }
+
+      .name::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border-radius: 5px;
+        z-index: -1;
+        opacity: 0.3;
+        animation: border-glow 3s ease-in-out infinite;
+        transition: all 1s ease;
+      }
+
+      @keyframes border-glow {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+
+      .icon {
+        filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));
+        width: 70px;
+        height: 70px;
+        transition: all 0.3s ease;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+          scale: 1;
+        }
+        50% {
+          transform: translateY(-6px);
+          scale: 1.05;
+        }
+      }
+
+      .floating-link {
+        position: absolute;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #00d4ff;
+        text-decoration: none;
+        cursor: pointer;
+        z-index: 20;
+        animation: float 3s ease-in-out infinite;
+        backdrop-filter: blur(5px);
+      }
+
+      .icon:hover {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.6));
+        color: #66e0ff;
+      }
+
+      .name:hover {
+        filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.6));
+      }
+      .name:hover::before {
+        box-shadow: inset 0 0 20px 6px rgb(0 212 255 / 25%);
+      }
+
+      @media (max-width: 768px) {
+        .name {
+          font-size: 2em;
+          padding: 15px 20px;
+        }
+
+        .floating-link {
+          width: 60px;
+          height: 60px;
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Animated grid background -->
+    <div class="grid-background"></div>
+
+    <!-- Floating particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Scan lines effect -->
+    <div class="scan-lines"></div>
+
+    <div class="container" id="container">
+      <div class="connection-lines" id="connectionLines"></div>
+
+      <div class="name" id="nameBox">daniel elgallab</div>
+
+      <a
+        href="https://github.com/danielgallab"
+        class="floating-link github"
+        target="_blank"
+        title="GitHub"
+        data-original-x="15"
+        data-original-y="60"
+      >
+        <svg class="icon" viewBox="0 0 97.6 96" fill="currentColor">
+          <path
+            d="M48.9,0C21.8,0,0,22,0,49.2C0,71,14,89.4,33.4,95.9c2.4,0.5,3.3-1.1,3.3-2.4c0-1.1-0.1-5.1-0.1-9.1
+	c-13.6,2.9-16.4-5.9-16.4-5.9c-2.2-5.7-5.4-7.2-5.4-7.2c-4.4-3,0.3-3,0.3-3c4.9,0.3,7.5,5.1,7.5,5.1c4.4,7.5,11.4,5.4,14.2,4.1
+	c0.4-3.2,1.7-5.4,3.1-6.6c-10.8-1.1-22.2-5.4-22.2-24.3c0-5.4,1.9-9.8,5-13.2c-0.5-1.2-2.2-6.3,0.5-13c0,0,4.1-1.3,13.4,5.1
+	c3.9-1.1,8.1-1.6,12.2-1.6s8.3,0.6,12.2,1.6c9.3-6.4,13.4-5.1,13.4-5.1c2.7,6.8,1,11.8,0.5,13c3.2,3.4,5,7.8,5,13.2
+	c0,18.9-11.4,23.1-22.3,24.3c1.8,1.5,3.3,4.5,3.3,9.1c0,6.6-0.1,11.9-0.1,13.5c0,1.3,0.9,2.9,3.3,2.4C83.6,89.4,97.6,71,97.6,49.2
+	C97.7,22,75.8,0,48.9,0z"
+          />
+        </svg>
+      </a>
+
+      <a
+        href="https://linkedin.com/in/danielgallab"
+        class="floating-link linkedin"
+        target="_blank"
+        title="LinkedIn"
+        data-original-x="50"
+        data-original-y="70"
+      >
+        <svg class="icon" viewBox="0 0 382 382" fill="currentColor">
+          <path
+            d="M347.445,0H34.555C15.471,0,0,15.471,0,34.555v312.889C0,366.529,15.471,382,34.555,382h312.889
+                C366.529,382,382,366.529,382,347.444V34.555C382,15.471,366.529,0,347.445,0z M118.207,329.844c0,5.554-4.502,10.056-10.056,10.056
+                H65.345c-5.554,0-10.056-4.502-10.056-10.056V150.403c0-5.554,4.502-10.056,10.056-10.056h42.806
+                c5.554,0,10.056,4.502,10.056,10.056V329.844z M86.748,123.432c-22.459,0-40.666-18.207-40.666-40.666S64.289,42.1,86.748,42.1
+                s40.666,18.207,40.666,40.666S109.208,123.432,86.748,123.432z M341.91,330.654c0,5.106-4.14,9.246-9.246,9.246H286.73
+                c-5.106,0-9.246-4.14-9.246-9.246v-84.168c0-12.556,3.683-55.021-32.813-55.021c-28.309,0-34.051,29.066-35.204,42.11v97.079
+                c0,5.106-4.139,9.246-9.246,9.246h-44.426c-5.106,0-9.246-4.14-9.246-9.246V149.593c0-5.106,4.14-9.246,9.246-9.246h44.426
+                c5.106,0,9.246,4.14,9.246,9.246v15.655c10.497-15.753,26.097-27.912,59.312-27.912c73.552,0,73.131,68.716,73.131,106.472
+                L341.91,330.654L341.91,330.654z"
+          />
+        </svg>
+      </a>
+
+      <a
+        href="mailto:daniel.elgallab@gmail.com"
+        class="floating-link gmail"
+        target="_blank"
+        title="Email"
+        data-original-x="75"
+        data-original-y="35"
+      >
+        <svg class="icon" viewBox="0 0 640 640" fill="currentColor">
+          <path
+            d="M112 128C85.5 128 64 149.5 64 176C64 191.1 71.1 205.3 83.2 214.4L291.2 370.4C308.3 383.2 331.7 383.2 348.8 370.4L556.8 214.4C568.9 205.3 576 191.1 576 176C576 149.5 554.5 128 528 128L112 128zM64 260L64 448C64 483.3 92.7 512 128 512L512 512C547.3 512 576 483.3 576 448L576 260L377.6 408.8C343.5 434.4 296.5 434.4 262.4 408.8L64 260z"
+          />
+        </svg>
+      </a>
+    </div>
+
+    <script>
+      // Original portfolio functionality
+      const container = document.getElementById("container");
+      const nameBox = document.getElementById("nameBox");
+      const connectionLines = document.getElementById("connectionLines");
+      const links = document.querySelectorAll(".floating-link");
+
+      let mouseX = 50;
+      let mouseY = 50;
+      let animationId;
+
+      // Initialize particles
+      function createParticles() {
+        const particlesContainer = document.getElementById("particles");
+        const particleCount = 50;
+
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+
+          const size = Math.random() * 3 + 1;
+          const duration = Math.random() * 10 + 15;
+          const delay = Math.random() * 20;
+
+          particle.style.width = size + "px";
+          particle.style.height = size + "px";
+          particle.style.left = Math.random() * 100 + "%";
+          particle.style.animationDuration = duration + "s";
+          particle.style.animationDelay = delay + "s";
+
+          particlesContainer.appendChild(particle);
+        }
+      }
+
+      // Initialize background effects
+      createParticles();
+
+      // Original portfolio functionality continues...
+      links.forEach((link, index) => {
+        const originalX = parseFloat(link.dataset.originalX);
+        const originalY = parseFloat(link.dataset.originalY);
+
+        link.style.left = `${originalX}%`;
+        link.style.top = `${originalY}%`;
+
+        link.linkData = {
+          originalX: originalX,
+          originalY: originalY,
+          currentX: originalX,
+          currentY: originalY,
+          targetX: originalX,
+          targetY: originalY,
+        };
+        link.style.animationDelay = `${index * 0.5}s`;
+
+        const line = document.createElement("div");
+        line.className = "connection-line";
+        line.style.animationDelay = `${index * 0.5}s`;
+        connectionLines.appendChild(line);
+        link.connectionLine = line;
+      });
+
+      function getElementCenter(element) {
+        const rect = element.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        return {
+          x: rect.left + rect.width / 2 - containerRect.left,
+          y: rect.top + rect.height / 2 - containerRect.top,
+        };
+      }
+
+      function updateConnectionLines() {
+        const nameCenter = getElementCenter(nameBox);
+        const containerRect = container.getBoundingClientRect();
+
+        links.forEach((link) => {
+          const linkCenter = getElementCenter(link);
+          const line = link.connectionLine;
+
+          const deltaX = linkCenter.x - nameCenter.x;
+          const deltaY = linkCenter.y - nameCenter.y;
+          const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+          const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+          line.style.left = `${nameCenter.x}px`;
+          line.style.top = `${nameCenter.y}px`;
+          line.style.width = `${distance}px`;
+          line.style.transform = `rotate(${angle}deg)`;
+
+          const maxDistance =
+            Math.min(containerRect.width, containerRect.height) * 0.3;
+          const opacity = Math.max(
+            0.2,
+            Math.min(0.8, (maxDistance - distance) / maxDistance)
+          );
+          line.style.opacity = opacity;
+        });
+      }
+
+      function updateIconPositions() {
+        links.forEach((link) => {
+          const data = link.linkData;
+
+          const deltaX = mouseX - data.originalX;
+          const deltaY = mouseY - data.originalY;
+          const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+          const maxDistance = 35;
+          const magnetStrength = Math.max(
+            0,
+            (maxDistance - distance) / maxDistance
+          );
+
+          const glideFactor = 0.01;
+          const inertiaFactor = 0.2;
+
+          const moveX = deltaX * magnetStrength * 0.5;
+          const moveY = deltaY * magnetStrength * 0.5;
+
+          data.targetX = data.originalX + moveX;
+          data.targetY = data.originalY + moveY;
+
+          data.currentX += (data.targetX - data.currentX) * glideFactor;
+          data.currentY += (data.targetY - data.currentY) * glideFactor;
+
+          link.style.left = `${data.currentX}%`;
+          link.style.top = `${data.currentY}%`;
+        });
+
+        updateConnectionLines();
+        animationId = requestAnimationFrame(updateIconPositions);
+      }
+
+      container.addEventListener("mousemove", (e) => {
+        const containerRect = container.getBoundingClientRect();
+        mouseX = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+        mouseY = ((e.clientY - containerRect.top) / containerRect.height) * 100;
+      });
+
+      container.addEventListener("mouseleave", () => {
+        links.forEach((link) => {
+          const data = link.linkData;
+          data.targetX = data.originalX;
+          data.targetY = data.originalY;
+        });
+      });
+
+      updateConnectionLines();
+      updateIconPositions();
+
+      window.addEventListener("resize", updateConnectionLines);
+
+      let draggingLink = null;
+      let wasDragging = false;
+      let initialMousePos = null;
+      let zIndexCounter = 1000;
+
+      links.forEach((link) => {
+        link.addEventListener("mousedown", (e) => {
+          e.preventDefault();
+          draggingLink = link;
+          link.style.zIndex = zIndexCounter++; // Bring to front
+          wasDragging = false;
+        });
+        link.addEventListener("mousemove", () => {
+          if (draggingLink) wasDragging = true;
+        });
+        link.addEventListener("mouseup", () => {
+          if (wasDragging) {
+            draggingLink.addEventListener(
+              "click",
+              function (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+              },
+              { once: true }
+            );
+          }
+          draggingLink = null;
+        });
+      });
+
+      function onMouseMove(e) {
+        if (!draggingLink) return;
+        if (!initialMousePos) {
+          const linkRect = draggingLink.getBoundingClientRect();
+          initialMousePos = {
+            x: e.clientX - linkRect.left,
+            y: e.clientY - linkRect.top,
+          };
+        }
+
+        const containerRect = container.getBoundingClientRect();
+        const x =
+          ((-initialMousePos.x + e.clientX - containerRect.left) /
+            containerRect.width) *
+          100;
+        const y =
+          ((-initialMousePos.y + e.clientY - containerRect.top) /
+            containerRect.height) *
+          100;
+
+        const data = draggingLink.linkData;
+        data.originalX = x;
+        data.originalY = y;
+        data.currentX = x;
+        data.currentY = y;
+        data.targetX = x;
+        data.targetY = y;
+
+        draggingLink.style.left = `${x}%`;
+        draggingLink.style.top = `${y}%`;
+      }
+
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("touchmove", (e) => {
+        const touch = e.touches[0];
+        onMouseMove(touch);
+      });
+
+      document.addEventListener("mouseup", onMouseUp);
+      document.addEventListener("touchend", onMouseUp);
+
+      function onMouseUp(e) {
+        draggingLink = null;
+        initialMousePos = null;
+        e.preventDefault();
+      }
+    </script>
+  </body>
+</html>
